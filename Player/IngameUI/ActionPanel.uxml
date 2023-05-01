@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="width: 5%; height: 20%; left: 65%; top: 80%; background-image: url(&apos;project://database/Assets/!AssetStore/GUI_Parts/Gui_parts/mid_background.png?fileID=2800000&amp;guid=f203f165ae401fe46ada0ed50d07149c&amp;type=3#mid_background&apos;); align-items: center; justify-content: center;">
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="Action1" style="width: 70%; height: 20%;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="Action2" style="width: 70%; height: 20%;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="Action3" style="width: 70%; height: 20%;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="Action4" style="width: 70%; height: 20%;" />
+    </ui:VisualElement>
+</ui:UXML>
