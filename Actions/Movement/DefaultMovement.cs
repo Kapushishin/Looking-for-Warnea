@@ -10,8 +10,6 @@ public class DefaultMovement : IMovement
     private float attackRange = 2;
     private float viewAngle = 720;
     private float stayTime = 4;
-    private float speedRun = 4;
-    private float speedWalk = 3.5f;
     private LayerMask _enemyLayer;
     private LayerMask _obstacleMask;
 
@@ -19,7 +17,6 @@ public class DefaultMovement : IMovement
     private float _stayTime = 0;
     private bool _enemyInRange = false;
     private Vector3 _enemyPosition;
-    private GameObject _player;
     protected int _currentWaypointIndex = 0;
     public bool _isAttacking = false;
 
@@ -43,35 +40,35 @@ public class DefaultMovement : IMovement
         _enemyLayer = enemyLayer;
         _unit = unit;
         _obstacleMask = LayerMask.NameToLayer("Default");
-        _waypoints = new Vector3[5] { position, 
+        _waypoints = new Vector3[5] { new Vector3(position.x + 10, position.y, position.z), position, 
+            new Vector3(position.x - 10, position.y, position.z),
+            new Vector3(position.x - 5, position.y, position.z + 5),
             new Vector3(position.x + 5, position.y, position.z +5),
-            new Vector3(position.x + 5, position.y, position.z + 10),
-            new Vector3(position.x + 10, position.y, position.z +10),
-            new Vector3(position.x + 10, position.y, position.z +5) };
+             };
         Patroling();
     }
 
-    // следование моба по вейпонтам с остановкой
+    // следование юнита по вейпоинтам с остановкой
     public bool Patroling()
     {
         EnviromentView();
         _navMeshAgent.SetDestination(_waypoints[_currentWaypointIndex]);
         if (_navMeshAgent.remainingDistance > _navMeshAgent.stoppingDistance)
         {
-            Move(speedWalk);
+            Move();
         }
         if (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
         { 
             if (_stayTime <= 0)
             {
                 NextPoint();
-                Move(speedWalk);
+                Move();
                 _stayTime = stayTime;
             }
             else
             {
                 Stop();
-                _stayTime -= Time.deltaTime;
+                _stayTime -= Time.deltaTime * 10;
             }
         }
         if (_enemyInRange)
@@ -81,17 +78,17 @@ public class DefaultMovement : IMovement
         return _isAttacking;
     }
 
-    // преследование игрока при обнаружении
+    // преследование противника при обнаружении
     private void Chasing()
     {
-        Move(speedRun);
+        Move();
         _navMeshAgent.SetDestination(_enemyPosition);
-        // Если игрок дальше радиуса видимости, то прекращать погоню
+        // Если противник дальше радиуса видимости, то прекращать погоню
         if (Vector3.Distance(_unit.transform.position, _enemyPosition) >= viewRadius)
         {
             _enemyInRange = false;
         }
-        // Если игрок ближе радиуса атаки, то атаковать
+        // Если противник ближе радиуса атаки, то атаковать
         if (Vector3.Distance(_unit.transform.position, _enemyPosition) <= attackRange)
         {
             _isAttacking = true;
@@ -100,10 +97,10 @@ public class DefaultMovement : IMovement
         else _isAttacking = false;
     }
 
-    // проверка видит ли моб игрока перед собой
+    // проверка видит ли юнит противника
     private void EnviromentView()
     {
-        // коллайдер вокруг врага при пересечении которого игроком, playerInRange = true
+        // коллайдер вокруг юнита при пересечении которого противником, _enemyInRange = true
         Collider[] playerDetect = Physics.OverlapSphere(_unit.transform.position, viewRadius, _enemyLayer.value);
         if (playerDetect.Length != 0)
         {
@@ -112,7 +109,7 @@ public class DefaultMovement : IMovement
             if (Vector3.Angle(_unit.transform.forward, dirToPlayer) < viewAngle / 2)
             {
                 float dstToPlayer = Vector3.Distance(_unit.transform.position, player.position);
-                //если игрок в радиусе обнаружения, но на пути есть препятствие слоя obstacleMask, то игрок не обнаружен, иначе обнаружен.
+                //если противник в радиусе обнаружения, но на пути есть препятствие слоя obstacleMask, то противник не обнаружен, иначе обнаружен.
                 if (!Physics.Raycast(_unit.transform.position, dirToPlayer, dstToPlayer, _obstacleMask))
                 {
                     _enemyInRange = true;
@@ -122,7 +119,7 @@ public class DefaultMovement : IMovement
                     _enemyInRange = false;
                 }
             }
-            // если игрок ушёл за радиус обнаружения, то игрок не обнаружен
+            // если противник ушёл за радиус обнаружения, то противник не обнаружен
             if (Vector3.Distance(_unit.transform.position, player.position) > viewRadius)
             {
                 _enemyInRange = false;
@@ -141,14 +138,14 @@ public class DefaultMovement : IMovement
         _navMeshAgent.SetDestination(_waypoints[_currentWaypointIndex]);
     }
 
-    // остановится при достижении вейпоинта или потере игрока
+    // остановится при достижении вейпоинта или потере противника
     private void Stop()
     {
         _navMeshAgent.isStopped = true;
     }
 
     // возобновление движения
-    private void Move(float speed)
+    private void Move()
     {
         _navMeshAgent.isStopped = false;
     }
