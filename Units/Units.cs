@@ -37,7 +37,7 @@ public abstract class Units : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     private TMP_Text _namefield;
     private int _unitLayer;
-    private bool _isAiEnabled = false;
+    [SerializeField] bool _isAiEnabled = false;
     private bool _selectedMesh = false;
     private int _damagableFound;
     private readonly Collider[] _weapon_colliders = new Collider[1];
@@ -45,6 +45,8 @@ public abstract class Units : MonoBehaviour
     private bool _isAttacking = false;
     private int _playerLayer = 7;
     private float _currentHealth;
+    private bool _canUpdateAi = true;
+    private float _canUpdateCd = 0.3f;
     #endregion
 
     private void OnEnable()
@@ -67,8 +69,9 @@ public abstract class Units : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isAiEnabled)
+        if (_isAiEnabled && _canUpdateAi)
         {
+            StartCoroutine(CanUpdateAi());
             _isAttacking = _movement.Patroling();
         }
 
@@ -102,6 +105,13 @@ public abstract class Units : MonoBehaviour
             _movement.StartAI(_navMeshAgent, _enemyLayer, gameObject, position);
             _isAiEnabled = true;
         }
+    }
+
+    private IEnumerator CanUpdateAi()
+    {
+        _canUpdateAi = false;
+        yield return new WaitForSeconds(_canUpdateCd);
+        _canUpdateAi = true;
     }
     #endregion
 
