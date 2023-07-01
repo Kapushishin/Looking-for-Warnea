@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
-
+using UnityEngine.Rendering.Universal;
 
 public abstract class Units : MonoBehaviour
 {
@@ -23,6 +23,7 @@ public abstract class Units : MonoBehaviour
     public ITakeDamage _takedamage;
     public IDoDamage _dodamage;
     public IIngameUI _ingameUI;
+    public IInitIcon _initIcon;
     #endregion
 
     #region Misc Variables
@@ -32,6 +33,8 @@ public abstract class Units : MonoBehaviour
     [SerializeField] float _weaponRadius = 1.5f;
     // enemy layer
     [SerializeField] LayerMask _enemyLayer;
+    // unit icon on minimap
+    [SerializeField] GameObject _icon;
 
     // misc
     private NavMeshAgent _navMeshAgent;
@@ -47,6 +50,7 @@ public abstract class Units : MonoBehaviour
     private float _currentHealth;
     private bool _canUpdateAi = true;
     private float _canUpdateCd = 0.3f;
+
     #endregion
 
     private void OnEnable()
@@ -56,6 +60,7 @@ public abstract class Units : MonoBehaviour
         _namefield = GameObject.FindGameObjectWithTag("NameField").GetComponent<TMP_Text>();
         _unitLayer = gameObject.layer;
         _currentHealth = _maxHealth;
+        _initIcon.IconInit(_unitLayer, _icon);
     }
 
     public virtual void InitUnitActions()
@@ -65,6 +70,7 @@ public abstract class Units : MonoBehaviour
         _takedamage = new DefaultTakeDamage();
         _dodamage = new DefaultDoDamage();
         _ingameUI = GameObject.FindGameObjectWithTag("UIPanel").GetComponent<DefaultIngameUI>();
+        _initIcon = new DefaultInitIcon();
     }
 
     private void FixedUpdate()
