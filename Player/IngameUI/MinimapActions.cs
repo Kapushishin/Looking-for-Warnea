@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class MinimapActions : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private Transform target;
+    [SerializeField] private GameObject cameraMap;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

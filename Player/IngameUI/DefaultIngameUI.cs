@@ -1,5 +1,7 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,7 +26,12 @@ public class DefaultIngameUI : MonoBehaviour, IIngameUI
     private Label _armorUI;
     private Label _levelUI;
 
-    private VisualElement _minimapUI;
+    private Button _minimapUI;
+
+    [SerializeField] private CinemachineVirtualCamera _playerCamera;
+    [SerializeField] private GameObject _minimapFrame;
+    [SerializeField] private GameObject _targetCamera;
+    [SerializeField] private GameObject _terrain;
 
     private Button _action1;
     private Button _action2;
@@ -57,7 +64,8 @@ public class DefaultIngameUI : MonoBehaviour, IIngameUI
         _armorUI = statsRoot.Q<Label>("Armor");
         _levelUI = statsRoot.Q<Label>("Level");
 
-        _minimapUI = minimapRoot.Q<VisualElement>("MiniMap");
+        _minimapUI = minimapRoot.Q<Button>("MiniMap");
+        _minimapUI.clicked += SetMiniMap;
 
         _action1 = actionsRoot.Q<Button>("Action1");
         _action2 = actionsRoot.Q<Button>("Action2");
@@ -86,7 +94,58 @@ public class DefaultIngameUI : MonoBehaviour, IIngameUI
 
     public void SetMiniMap()
     {
-        throw new System.NotImplementedException();
+        _playerCamera.Follow = _targetCamera.transform;
+        _playerCamera.LookAt = _targetCamera.transform;
+
+        Vector2 mouse = Input.mousePosition;
+        //Vector2 minimapSize = new Vector2 (Screen.width * 0.15f, Screen.height * 0.2f);
+
+        Vector2 mapsize = new Vector2(500f, 500f);
+
+        float minimapPosX = Screen.width * 0.85f;
+        float minimapSizeX = Screen.width - minimapPosX;
+        float minimapSizeY = Screen.height * 0.2f;
+        Debug.Log(minimapSizeY);
+
+        float X = minimapPosX - minimapSizeX / 2;
+        float Y = minimapSizeY / 2;
+
+
+
+        //float kScaleX = mapsize / minimapSize.x;
+        //float kScaleY = mapsize.y / minimapSize.y;
+
+        Vector2 minimapCenter = new Vector2(Screen.width * 0.15f / 2, Screen.height * 0.2f / 2);
+
+        Vector3 curPos = new Vector3(mouse.x - X, mouse.y - Y, 0);
+
+        X = minimapSizeX;
+        Y = 0;
+
+        Vector3 pos = new Vector3((curPos.x - X), 0, (curPos.y - Y));
+        _targetCamera.transform.position = pos;
+
+        //Debug.Log(Screen.width - minimapPosX);
+
+        /*_targetCamera.transform.position = 
+            new Vector3(-(minimapCenter.x - mouse.x/2 * 0.15f) * kScaleX,
+            _targetCamera.transform.position.y,
+            (minimapCenter.y - (Screen.height - mouse.y)/2 * 0.2f) * kScaleY);*/
+
+        /*_targetCamera.transform.position = new Vector3(- (Screen.width - mouse.x - minimapCenter.x),
+            _targetCamera.transform.position.y, 
+            (mouse.y - minimapCenter.y));*/
+
+        //Debug.Log("mouse x = " + mouse.x + "Screen.width = " + Screen.width);
+        //Debug.Log("mouse y = " + mouse.y + "Screen.height = " + Screen.height);
+        //Debug.Log("minimapCenter.x = " + minimapCenter.x + "minimapCenter.y" + minimapCenter.y);
+
+
+        /*_minimapFrame.transform.position =
+            new Vector3(-(minimapCenter.x - mouse.x / 2 * 0.15f) * kScaleX,
+            _minimapFrame.transform.position.y,
+           (minimapCenter.y - (Screen.height - mouse.y) / 2 * 0.2f) * kScaleY);*/
+
     }
 
     public void SetResources()

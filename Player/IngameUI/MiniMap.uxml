@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement style="width: 15%; height: 20%; left: 85%; top: 80%;">
-        <ui:VisualElement name="MiniMap" style="width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Minimap/Minimap%20Render%20Texture.renderTexture?fileID=8400000&amp;guid=fa10603b8afd1814a85fa3d00ab9cf8c&amp;type=2#Minimap Render Texture&apos;);">
+        <ui:Button display-tooltip-when-elided="true" name="MiniMap" style="width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Minimap/Minimap%20Render%20Texture.renderTexture?fileID=8400000&amp;guid=fa10603b8afd1814a85fa3d00ab9cf8c&amp;type=2#Minimap Render Texture&apos;); overflow: hidden; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
             <ui:VisualElement style="width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/!AssetStore/GUI_Parts/Gui_parts/Mini_frame0.png?fileID=2800000&amp;guid=4293f3f43e7a5524dbcb191b0ef09d9c&amp;type=3#Mini_frame0&apos;);" />
-        </ui:VisualElement>
+        </ui:Button>
     </ui:VisualElement>
 </ui:UXML>
